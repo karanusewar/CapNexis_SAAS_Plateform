@@ -93,16 +93,16 @@ export function Analyzer({ fileData, onComplete }: AnalyzerProps) {
          const modelCandidates = [
            'gemini-2.5-flash',
            'gemini-2.0-flash',
-           'gemini-1.5-flash-latest',
-           'gemini-1.5-pro-latest',
-           'gemini-2.0-flash-exp'
+           'gemini-1.5-flash',
+           'gemini-1.5-pro'
          ];
-         let response: any = null;
+         let responseText: string | null = null;
          let lastError: any = null;
 
+         // Strategy 1: Try SDK
          for (const modelName of modelCandidates) {
            try {
-             response = await ai.models.generateContent({
+             const res = await ai.models.generateContent({
                model: modelName,
                contents: contents,
                config: {
@@ -192,18 +192,46 @@ export function Analyzer({ fileData, onComplete }: AnalyzerProps) {
                }
              }
             });
-            if (response && response.text) break;
+            if (res && res.text) {
+              responseText = res.text;
+              break;
+            }
            } catch (mErr: any) {
              lastError = mErr;
-             console.warn(`Model ${modelName} unavailable, trying next candidate...`, mErr);
+             console.warn(`SDK Model ${modelName} failed, trying next...`, mErr);
            }
          }
 
-         if (!response || !response.text) {
-           throw lastError || new Error("All candidate Gemini models failed to respond.");
+         // Strategy 2: Direct REST API Fallback
+         if (!responseText) {
+           for (const modelName of ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro']) {
+             try {
+               const rawRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({
+                   contents: contents,
+                   generationConfig: { responseMimeType: "application/json" }
+                 })
+               });
+               const rawJson = await rawRes.json();
+               if (rawRes.ok && rawJson.candidates?.[0]?.content?.parts?.[0]?.text) {
+                 responseText = rawJson.candidates[0].content.parts[0].text;
+                 break;
+               } else if (rawJson.error) {
+                 lastError = new Error(rawJson.error.message || JSON.stringify(rawJson.error));
+               }
+             } catch (fetchErr) {
+               lastError = fetchErr;
+             }
+           }
          }
 
-         const resultText = response.text;
+         if (!responseText) {
+           throw lastError || new Error("All Gemini model attempts failed. Please verify your GEMINI_API_KEY in Vercel.");
+         }
+
+         const resultText = responseText;
          if (!resultText) {
             throw new Error("Empty response from AI");
          }
