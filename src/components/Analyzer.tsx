@@ -90,7 +90,13 @@ export function Analyzer({ fileData, onComplete }: AnalyzerProps) {
             throw new Error("No valid document data provided.");
          }
 
-         const modelCandidates = ['gemini-3.6-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+         const modelCandidates = [
+           'gemini-2.5-flash',
+           'gemini-2.0-flash',
+           'gemini-1.5-flash-latest',
+           'gemini-1.5-pro-latest',
+           'gemini-2.0-flash-exp'
+         ];
          let response: any = null;
          let lastError: any = null;
 
