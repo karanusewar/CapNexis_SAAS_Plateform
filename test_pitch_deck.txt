@@ -1,0 +1,14 @@
+[Slide 1: Title]
+Acme Corp: Revolutionizing Cloud Storage
+[Slide 2: Problem]
+Enterprise cloud storage is too expensive and lacks security. Companies waste 40% of their budget.
+[Slide 3: Solution]
+Our AI-driven compression algorithm saves 40% on AWS bills while maintaining military-grade encryption.
+[Slide 4: Market]
+TAM: $50 Billion. SAM: $10 Billion. SOM: $1 Billion.
+[Slide 5: Business Model]
+SaaS subscription. $100/user/month.
+[Slide 6: Financials]
+We want to raise $2M. 
+[Slide 7: Team]
+CEO: Jane Doe (ex-Google). CTO: John Smith (ex-AWS).

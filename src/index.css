@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-brush: "Caveat", cursive;
+  
+  --color-brand-cyan: #0fbac6;
+  --color-brand-blue: #1c52a3;
+  --color-brand-pink: #f72585;
+  --color-brand-btn: #38e0c8;
+  --color-brand-btn-hover: #21ceb5;
+  --color-brand-dark: #09102b;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-dark);
+  color: white;
+  overflow-x: hidden;
+  /* Custom Tech Cyan Cursor */
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 4l5.5 15.5 2.5-7.5L19 9.5z' fill='%230fbac6' stroke='%23ffffff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 4, auto;
+}
+
+/* Custom Interactive Pink Target Cursor for clickable elements */
+a, button, [role="button"], [role="tab"], .cursor-pointer {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23f72585' fill-opacity='0.4' stroke='%23f72585' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23ffffff'/%3E%3C/svg%3E") 12 12, pointer !important;
+}

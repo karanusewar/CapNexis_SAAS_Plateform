@@ -1,0 +1,38 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account info and credits",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "credits": { "type": "number" },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["email", "credits", "createdAt"]
+    },
+    "Analysis": {
+      "title": "Pitch Deck Analysis",
+      "description": "The result of Gemini analyzing a PDF",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "deckName": { "type": "string" },
+        "scores": { "type": "object" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["userId", "deckName", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user credits to prevent abuse"
+    },
+    "/users/{userId}/analyses/{analysisId}": {
+      "schema": { "$ref": "#/entities/Analysis" },
+      "description": "Stores the user's pitch deck analyses securely"
+    }
+  }
+}

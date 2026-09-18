@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    function isValidUser(data) {
+      return data.keys().hasAll(['email', 'credits', 'createdAt']) 
+        && data.email is string
+        && data.credits is number
+        && data.credits >= 0;
+    }
+    
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId)
+                    && isValidUser(incoming())
+                    && incoming().createdAt == request.time;
+      allow update: if isOwner(userId)
+                    && isValidUser(incoming())
+                    && incoming().diff(existing()).affectedKeys().hasOnly(['credits'])
+                    && incoming().credits <= existing().credits; // User can only spend credits, server adds them
+    }
+    
+    function isValidAnalysis(data) {
+      return data.keys().hasAll(['userId', 'deckName', 'status', 'createdAt'])
+        && data.userId == request.auth.uid
+        && data.deckName is string
+        && data.deckName.size() <= 200
+        && data.status in ['pending', 'completed', 'failed'];
+    }
+    
+    match /users/{userId}/analyses/{analysisId} {
+      allow read, list: if isOwner(userId);
+      allow create: if isOwner(userId)
+                    && isValidAnalysis(incoming())
+                    && incoming().createdAt == request.time
+                    && exists(/databases/$(database)/documents/users/$(userId));
+      allow update: if isOwner(userId)
+                    && isValidAnalysis(incoming())
+                    && incoming().createdAt == existing().createdAt; // Allow updating analysis details
+      allow delete: if isOwner(userId);
+    }
+  }
+}
