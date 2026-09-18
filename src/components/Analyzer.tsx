@@ -90,96 +90,112 @@ export function Analyzer({ fileData, onComplete }: AnalyzerProps) {
             throw new Error("No valid document data provided.");
          }
 
-         const response = await ai.models.generateContent({
-           model: 'gemini-2.5-flash',
-           contents: contents,
-           config: {
-             responseMimeType: "application/json",
-             responseSchema: {
-                type: Type.OBJECT,
-                properties: {
-                   generalScore: { type: Type.INTEGER },
-                   summary: { type: Type.STRING },
-                   capitalRisk: { type: Type.STRING, description: "LOW, MEDIUM, HIGH, or CRITICAL" },
-                   narrativeMatch: { type: Type.INTEGER, description: "Score 0-100 indicating match to YC/Sequoia standard" },
-                   strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
-                   weaknesses: { type: Type.ARRAY, items: { type: Type.STRING } },
-                   aiRecommendations: { 
-                      type: Type.ARRAY, 
-                      items: { 
-                         type: Type.OBJECT, 
-                         properties: {
-                            title: { type: Type.STRING },
-                            description: { type: Type.STRING }
-                         } 
-                      } 
-                   },
-                   sections: {
-                      type: Type.OBJECT,
-                      properties: {
-                         market: { type: Type.INTEGER },
-                         product: { type: Type.INTEGER },
-                         financials: { type: Type.INTEGER },
-                         storytelling: { type: Type.INTEGER },
-                         clarity: { type: Type.INTEGER },
-                      }
-                   },
-                   advancedMetrics: {
-                      type: Type.OBJECT,
-                      properties: {
-                         idea: { type: Type.INTEGER },
-                         product: { type: Type.INTEGER },
-                         gtm: { type: Type.INTEGER },
-                         revenue: { type: Type.INTEGER },
-                         ip: { type: Type.INTEGER },
-                         scalability: { type: Type.INTEGER },
-                         network: { type: Type.INTEGER },
-                         exit: { type: Type.INTEGER }
-                      }
-                   },
-                   dealMemo: {
-                      type: Type.OBJECT,
-                      properties: {
-                         marketNotes: { type: Type.ARRAY, items: { type: Type.STRING } },
-                         diligenceGaps: { type: Type.ARRAY, items: { type: Type.STRING } },
-                         financialFlags: { type: Type.ARRAY, items: { type: Type.STRING } },
-                         increaseConviction: { type: Type.ARRAY, items: { type: Type.STRING } },
-                         recommendedDiligence: { type: Type.ARRAY, items: { type: Type.STRING } },
-                         assumptions: { type: Type.ARRAY, items: { type: Type.STRING } },
-                         finalVerdict: { type: Type.STRING }
-                      }
-                   },
-                   slides: {
-                      type: Type.ARRAY,
-                      items: {
-                         type: Type.OBJECT,
-                         properties: {
-                            id: { type: Type.INTEGER },
-                            type: { type: Type.STRING },
-                            title: { type: Type.STRING },
-                            scores: {
-                               type: Type.OBJECT,
-                               properties: {
-                                  impact: { type: Type.INTEGER }
-                               }
-                            },
-                            issues: {
-                               type: Type.ARRAY,
-                               items: { type: Type.STRING }
-                            },
-                            rewrite: {
-                               type: Type.OBJECT,
-                               properties: {
-                                  improved: { type: Type.STRING }
-                               }
-                            }
-                         }
-                      }
-                   }
-                }
+         const modelCandidates = ['gemini-3.6-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+         let response: any = null;
+         let lastError: any = null;
+
+         for (const modelName of modelCandidates) {
+           try {
+             response = await ai.models.generateContent({
+               model: modelName,
+               contents: contents,
+               config: {
+                 responseMimeType: "application/json",
+                 responseSchema: {
+                  type: Type.OBJECT,
+                  properties: {
+                     generalScore: { type: Type.INTEGER },
+                     summary: { type: Type.STRING },
+                     capitalRisk: { type: Type.STRING, description: "LOW, MEDIUM, HIGH, or CRITICAL" },
+                     narrativeMatch: { type: Type.INTEGER, description: "Score 0-100 indicating match to YC/Sequoia standard" },
+                     strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
+                     weaknesses: { type: Type.ARRAY, items: { type: Type.STRING } },
+                     aiRecommendations: { 
+                        type: Type.ARRAY, 
+                        items: { 
+                           type: Type.OBJECT, 
+                           properties: {
+                              title: { type: Type.STRING },
+                              description: { type: Type.STRING }
+                           } 
+                        } 
+                     },
+                     sections: {
+                        type: Type.OBJECT,
+                        properties: {
+                           market: { type: Type.INTEGER },
+                           product: { type: Type.INTEGER },
+                           financials: { type: Type.INTEGER },
+                           storytelling: { type: Type.INTEGER },
+                           clarity: { type: Type.INTEGER },
+                        }
+                     },
+                     advancedMetrics: {
+                        type: Type.OBJECT,
+                        properties: {
+                           idea: { type: Type.INTEGER },
+                           product: { type: Type.INTEGER },
+                           gtm: { type: Type.INTEGER },
+                           revenue: { type: Type.INTEGER },
+                           ip: { type: Type.INTEGER },
+                           scalability: { type: Type.INTEGER },
+                           network: { type: Type.INTEGER },
+                           exit: { type: Type.INTEGER }
+                        }
+                     },
+                     dealMemo: {
+                        type: Type.OBJECT,
+                        properties: {
+                           marketNotes: { type: Type.ARRAY, items: { type: Type.STRING } },
+                           diligenceGaps: { type: Type.ARRAY, items: { type: Type.STRING } },
+                           financialFlags: { type: Type.ARRAY, items: { type: Type.STRING } },
+                           increaseConviction: { type: Type.ARRAY, items: { type: Type.STRING } },
+                           recommendedDiligence: { type: Type.ARRAY, items: { type: Type.STRING } },
+                           assumptions: { type: Type.ARRAY, items: { type: Type.STRING } },
+                           finalVerdict: { type: Type.STRING }
+                        }
+                     },
+                     slides: {
+                        type: Type.ARRAY,
+                        items: {
+                           type: Type.OBJECT,
+                           properties: {
+                              id: { type: Type.INTEGER },
+                              type: { type: Type.STRING },
+                              title: { type: Type.STRING },
+                              scores: {
+                                 type: Type.OBJECT,
+                                 properties: {
+                                    impact: { type: Type.INTEGER }
+                                 }
+                              },
+                              issues: {
+                                 type: Type.ARRAY,
+                                 items: { type: Type.STRING }
+                              },
+                              rewrite: {
+                                 type: Type.OBJECT,
+                                 properties: {
+                                    improved: { type: Type.STRING }
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
              }
+            });
+            if (response && response.text) break;
+           } catch (mErr: any) {
+             lastError = mErr;
+             console.warn(`Model ${modelName} unavailable, trying next candidate...`, mErr);
            }
-         });
+         }
+
+         if (!response || !response.text) {
+           throw lastError || new Error("All candidate Gemini models failed to respond.");
+         }
 
          const resultText = response.text;
          if (!resultText) {
