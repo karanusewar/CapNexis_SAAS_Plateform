@@ -110,9 +110,10 @@ export function Analyzer({ fileData, onComplete }: AnalyzerProps) {
          const modelCandidates = Array.from(new Set([
            ...dynamicCandidates,
            'gemini-2.5-flash',
-           'gemini-2.0-flash',
-           'gemini-1.5-flash',
-           'gemini-1.5-pro'
+           'gemini-3.6-flash',
+           'gemini-3.5-flash',
+           'gemini-flash-latest',
+           'gemini-pro-latest'
          ]));
 
          let responseText: string | null = null;
