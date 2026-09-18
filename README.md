@@ -1,4 +1,4 @@
-﻿# 🚀 CapNexis – Institutional AI Pitch Deck Analyzer
+# 🚀 CapNexis – Institutional AI Pitch Deck Analyzer
 
 [![React](https://img.shields.io/badge/React-19.0.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -44,7 +44,7 @@
 
 ---
 
-## 💡 Technical Engineering & Hard Work
+## 💡 Technical Engineering
 
 Building CapNexis involved solving several non-trivial frontend, backend, and AI integration challenges:
 
@@ -93,7 +93,9 @@ Building CapNexis involved solving several non-trivial frontend, backend, and AI
 
 ## ☁️ Deployment
 
-CapNexis is production-ready for deployment on **Vercel**:
+CapNexis is deployed and production-ready on **Vercel**:
+
+🌐 **Live Website:** [https://capnexis-saas.vercel.app/](https://capnexis-saas.vercel.app/)
 
 1. Push code to GitHub.
 2. Import the repository in [Vercel](https://vercel.com).
@@ -104,5 +106,5 @@ CapNexis is production-ready for deployment on **Vercel**:
 
 ## 🤝 Contact & Credits
 
-- Developed by **[Karan Usewar](https://github.com/karanusewar)**
+- Developed by **[Karan Usewar](https://www.linkedin.com/in/karanusewar/)**
 - Flagship product concept powered by **[CapNexgen](https://www.capnexgen.com/)**
