@@ -61,9 +61,9 @@ export function Analyzer({ fileData, onComplete }: AnalyzerProps) {
 
        try {
          const { GoogleGenAI, Type } = await import('@google/genai');
-         const apiKey = process.env.GEMINI_API_KEY;
+         const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.GEMINI_API_KEY;
          if (!apiKey) {
-           throw new Error("Missing GEMINI_API_KEY");
+           throw new Error("Missing GEMINI_API_KEY. Please add GEMINI_API_KEY to your Vercel Environment Variables and redeploy.");
          }
          const ai = new GoogleGenAI({ apiKey });
 
